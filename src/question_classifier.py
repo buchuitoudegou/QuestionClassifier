@@ -3,7 +3,8 @@ import numpy as np
 import random
 import re
 import argparse
-import utils
+from utils.file_preload import *
+from utils.preprocess import *
 from model import QuestionClassifier
 from dataloader import DataLoader
 from config import get_config
@@ -37,8 +38,8 @@ def test_trec(model, dataloader):
 
 def train(config, vocabulary, labels, stop_words, save_path='', mode='dev'):
   if config['from_pretrain'] == 'True':
-    pretrain_dict = utils.load_pre_train(config['pretrain_embedding_path'])
-    pretrain_weight = utils.create_word_embedding(pretrain_dict, vocabulary)
+    pretrain_dict = load_pre_train(config['pretrain_embedding_path'])
+    pretrain_weight = create_word_embedding(pretrain_dict, vocabulary)
     embedding_dim = len(pretrain_weight[0])
   else:
     pretrain_weight = [0]
@@ -61,12 +62,12 @@ def train(config, vocabulary, labels, stop_words, save_path='', mode='dev'):
   loss_function = torch.nn.CrossEntropyLoss()
   optimizer = torch.optim.Adam(model.parameters(), lr=float(config['lr']))
   if mode == 'dev':
-    train_set = utils.load_data(config['train_path'])
-    val_set = utils.load_data(config['dev_path'])
+    train_set = load_data(config['train_path'])
+    val_set = load_data(config['dev_path'])
     val_loader = DataLoader(vocabulary, labels, stop_words, val_set, 1, False)
   else:
-    train_set = utils.load_data(config['raw_path'])
-  test_set = utils.load_data(config['test_path'])
+    train_set = load_data(config['raw_path'])
+  test_set = load_data(config['test_path'])
   train_loader = DataLoader(vocabulary, labels, stop_words, train_set, int(config['batch_size']), config['padding'] == 'True', int(config['padding_len']))
   test_loader = DataLoader(vocabulary, labels, stop_words, test_set, 1, config['padding'] == 'True')
 
@@ -96,8 +97,8 @@ def train(config, vocabulary, labels, stop_words, save_path='', mode='dev'):
 
 def test(config, vocabulary, labels, stop_words, save_path):
   if config['from_pretrain'] == 'True':
-    pretrain_dict = utils.load_pre_train(config['pretrain_embedding_path'])
-    pretrain_weight = utils.create_word_embedding(pretrain_dict, vocabulary)
+    pretrain_dict = load_pre_train(config['pretrain_embedding_path'])
+    pretrain_weight = create_word_embedding(pretrain_dict, vocabulary)
     embedding_dim = len(pretrain_weight[0])
   else:
     pretrain_weight = [0]
@@ -116,7 +117,7 @@ def test(config, vocabulary, labels, stop_words, save_path):
     hidden_dim=int(config['hidden_dim']),
     output_dim=len(labels)
   )
-  test_set = utils.load_data(config['test_path'])
+  test_set = load_data(config['test_path'])
   test_loader = DataLoader(vocabulary, labels, stop_words, test_set, 1, config['padding'] == 'True')
   if int(config['ensemble_size']) == 1:
     model.load_state_dict(torch.load(save_path[0]))
@@ -161,7 +162,7 @@ def main():
   args = cmdparser()
   config = get_config(args.config)
   if args.preprocess:
-    utils.preprocess(
+    preprocess(
       config['raw_path'],
       config['train_path'],
       config['dev_path'],
@@ -169,9 +170,9 @@ def main():
       config['stop_word_path'],
       config['vocabulary_path']
     )
-  labels = utils.load_labels(config['label_path'])
-  vocabulary = utils.load_vocabulary(config['vocabulary_path'])
-  stop_words = utils.load_stop_words(config['stop_word_path'])
+  labels = load_labels(config['label_path'])
+  vocabulary = load_vocabulary(config['vocabulary_path'])
+  stop_words = load_stop_words(config['stop_word_path'])
   
   if args.dev:
     train(config, vocabulary, labels, stop_words, save_path='', mode='dev')

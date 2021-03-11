@@ -1,5 +1,5 @@
 import torch
-from sentVect import BOW, Bilstm
+import sentVect.bow as bow, sentVect.bilstm as bilstm
 
 class BowBilstm(torch.nn.Module):
   def __init__(self,
@@ -11,7 +11,7 @@ class BowBilstm(torch.nn.Module):
         bilstm_hidden_dim
   ):
     super(BowBilstm, self).__init__()
-    self.bow = BOW(
+    self.bow = bow.BOW(
         vocab_size,
         embedding_dim,
         from_pretrain,
@@ -19,12 +19,12 @@ class BowBilstm(torch.nn.Module):
         freeze
       )
     if from_pretrain:
-      emb = torch.nn.EmbeddingBag.from_pretrained(pre_train_weight, freeze=freeze)
+      emb = torch.nn.Embedding.from_pretrained(pre_train_weight, freeze=freeze)
     else:
-      emb = torch.nn.EmbeddingBag(vocab_size, embedding_dim, mode='sum')
+      emb = torch.nn.Embedding(vocab_size, embedding_dim, mode='sum')
     self.bilstm = torch.nn.Sequential(
       emb,
-      Bilstm(vocab_size, embedding_dim, bilstm_hidden_dim)
+      bilstm.Bilstm(vocab_size, embedding_dim, bilstm_hidden_dim)
     )
   
   def forward(self, x):

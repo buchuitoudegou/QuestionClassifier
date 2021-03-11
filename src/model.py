@@ -1,7 +1,9 @@
 import torch
+from classifier.network import NeuralNetwork
+from sentVect.bow import BOW
+from sentVect.bilstm import Bilstm
+from sentVect.bow_bilstm import BowBilstm
 
-from classifier import NeuralNetwork
-from sentVect import BOW, Bilstm, BowBilstm
 
 class QuestionClassifier(torch.nn.Module):
   def __init__(
