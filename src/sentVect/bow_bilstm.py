@@ -1,5 +1,5 @@
 import torch
-import sentVect.bow as bow, sentVect.bilstm as bilstm
+import sentVect.bow as bow, sentVect.mybilstm as bilstm
 
 class BowBilstm(torch.nn.Module):
   def __init__(self,

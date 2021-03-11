@@ -1,7 +1,7 @@
 import torch
 from classifier.network import NeuralNetwork
 from sentVect.bow import BOW
-from sentVect.bilstm import Bilstm
+from sentVect.mybilstm import Bilstm
 from sentVect.bow_bilstm import BowBilstm
 
 
