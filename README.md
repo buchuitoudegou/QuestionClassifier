@@ -7,6 +7,47 @@ Git repo: [Question Classifier](https://github.com/buchuitoudegou/QuestionClassi
 tokenization->word embedding->sentence vector->training the classifier
 ```
 
+## folder structure
+```
+.
+├── README.md
+├── data
+│   ├── config
+│   │   ├── xxx.config
+│   ├── dev.txt
+│   ├── glove.small.txt
+│   ├── labels.txt
+│   ├── raw_data.txt
+│   ├── stopword.txt
+│   ├── train.txt
+│   ├── trec.txt
+│   └── vocabulary.txt
+├── document
+│   ├── README.md
+│   ├── document.md
+│   └── document.pdf
+├── src
+│   ├── classifier
+│   │   ├── __init__.py
+│   │   └── network.py
+│   ├── config.ini
+│   ├── config.py
+│   ├── dataloader.py
+│   ├── model.py
+│   ├── question_classifier.py
+│   ├── sentVect
+│   │   ├── __init__.py
+│   │   ├── bow.py
+│   │   ├── bow_bilstm.py
+│   │   └── mybilstm.py
+│   └── utils
+│       ├── __init__.py
+│       ├── file_preload.py
+│       └── preprocess.py
+└──
+
+```
+
 ## commit msg
 `[your task]: what you did in this commit`
 
